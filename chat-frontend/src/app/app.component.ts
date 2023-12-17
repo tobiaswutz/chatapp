@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal, WritableSignal, afterNextRender, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -10,19 +10,23 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   templateUrl: './app.component.html',
   styles: [],
 })
-export class AppComponent implements OnInit {
-  data: any | undefined;
+export class AppComponent {
+  title = 'chat-frontend';
+  data: any = {};
 
   constructor(
     private http: HttpClient,
-  ) { }
+  ) {
+    afterNextRender(() => {
 
-  async ngOnInit(): Promise<void> {
-    this.http.get('http://localhost:8080/server').subscribe((data) => {
-      this.data = data;
+      setInterval(() => {
+        this.http.get('http://localhost:8080/server').subscribe((data) => {
+          this.data = data;
+
+        });
+      }, 2000);
     });
   }
 
 
-  title = 'chat-frontend';
 }
